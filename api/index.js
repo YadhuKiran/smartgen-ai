@@ -114,18 +114,23 @@ app.post('/api/generate-comparison', async (req, res) => {
       Language: ${language}
       Audiences to target: ${audiences.join(', ')}
       
-      Respond in strict JSON format. Do NOT include markdown formatting, JUST the JSON object:
+      You must respond in strict JSON format. Do NOT include markdown formatting (like \`\`\`json) or any other text, JUST the JSON object:
       {
         "comparisons": [
           {
             "audience": "Target Audience 1",
             "slogan": "catchy slogan tailored to this audience",
-            "adCopy": "short ad copy tailored to this audience"
-          },
-          {
-            "audience": "Target Audience 2",
-            "slogan": "catchy slogan tailored to this audience",
-            "adCopy": "short ad copy tailored to this audience"
+            "caption": "social media caption for this audience",
+            "cta": "call to action",
+            "hashtags": ["#tag1", "#tag2", "#tag3"],
+            "emotionalTone": "e.g., Energetic, Premium, Aggressive",
+            "engagementScore": 95,
+            "emotionalAnalysis": {
+              "excitement": 90,
+              "trust": 70,
+              "urgency": 85
+            },
+            "psychologyInsight": "Detailed commentary explaining why this specific strategy and tone appeals to this demographic's psychological triggers."
           }
         ]
       }
