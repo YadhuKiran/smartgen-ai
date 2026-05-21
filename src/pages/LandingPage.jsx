@@ -1,116 +1,306 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Zap, Target, Image as ImageIcon, BarChart } from 'lucide-react';
+import { Sparkles, ArrowRight, Zap, Target, Image as ImageIcon, BarChart, ChevronRight, Play, CheckCircle2, XCircle } from 'lucide-react';
+
+// A mock live typing effect for the hero showcase
+const TypingText = ({ text }) => {
+  const [displayed, setDisplayed] = useState('');
+  useEffect(() => {
+    let i = 0;
+    setDisplayed('');
+    const interval = setInterval(() => {
+      setDisplayed(text.substring(0, i));
+      i++;
+      if (i > text.length) clearInterval(interval);
+    }, 40);
+    return () => clearInterval(interval);
+  }, [text]);
+  return <span>{displayed}</span>;
+};
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { scrollYProgress } = useScroll();
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#030712] selection:bg-purple-500/30">
+      
+      {/* Cinematic Ambient Background */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/10 blur-[120px] animate-pulse-glow"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[120px] animate-pulse-glow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[40%] left-[60%] w-[30%] h-[30%] rounded-full bg-pink-600/5 blur-[100px] animate-float"></div>
+        {/* Subtle Noise Texture Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+      </div>
+
       {/* Navbar */}
-      <nav className="flex justify-between items-center p-6 lg:px-12 glassmorphism border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="flex items-center gap-2">
-          <Sparkles className="text-purple-400" size={28} />
-          <span className="text-2xl font-bold text-gradient">SmartGen AI</span>
-        </div>
-        <button 
-          onClick={() => navigate('/dashboard')}
-          className="bg-white/10 hover:bg-white/20 border border-white/20 transition-all text-white px-6 py-2 rounded-full font-medium"
-        >
-          Login
-        </button>
-      </nav>
-
-      {/* Hero Section */}
-      <main className="container mx-auto px-6 py-20 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-4xl mx-auto"
-        >
-          <div className="inline-block px-4 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 font-medium text-sm mb-6">
-            ✨ The Future of Personalized Marketing
+      <nav className="flex justify-between items-center px-6 py-4 lg:px-12 fixed w-full z-50 glass-panel border-b-0 border-white/5 transition-all">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+            <Sparkles className="text-white" size={20} />
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-8 leading-tight tracking-tight">
-            Generate AI-Powered <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-blue-400">
-              Personalized Campaigns
-            </span> <br/>
-            in Seconds.
-          </h1>
-          
-          <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto">
-            Stop writing generic ads. SmartGen AI analyzes your product, target audience, and brand tone to generate highly-converting, platform-optimized marketing content.
-          </p>
-
+          <span className="text-2xl font-display font-bold text-white tracking-tight">SmartGen<span className="text-purple-400">.ai</span></span>
+        </div>
+        <div className="flex gap-4 items-center">
+          <button className="hidden md:block text-slate-300 hover:text-white transition-colors text-sm font-medium">Features</button>
+          <button className="hidden md:block text-slate-300 hover:text-white transition-colors text-sm font-medium mr-4">Use Cases</button>
           <button 
             onClick={() => navigate('/dashboard')}
-            className="group relative inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-blue-600 p-[2px] rounded-full overflow-hidden hover:scale-105 transition-transform"
+            className="group relative inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-5 py-2.5 rounded-full font-medium text-sm transition-all"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 blur-md opacity-50 group-hover:opacity-100 transition-opacity"></span>
-            <span className="relative flex items-center gap-3 bg-slate-900/90 px-8 py-4 rounded-full text-lg font-bold text-white">
-              Start Generating <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </span>
+            Log in
           </button>
-        </motion.div>
-
-        {/* Feature Cards */}
-        <div className="grid md:grid-cols-4 gap-6 mt-32">
-          {[
-            { icon: <Zap size={32}/>, title: "AI Copy Generation", desc: "Instantly create slogans, captions, and ad copy." },
-            { icon: <Target size={32}/>, title: "Audience Personalization", desc: "Tailor messaging for any specific demographic." },
-            { icon: <ImageIcon size={32}/>, title: "AI Poster Studio", desc: "Generate promotional images in one click." },
-            { icon: <BarChart size={32}/>, title: "Engagement Insights", desc: "Predict performance before you post." }
-          ].map((feat, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 + 0.5 }}
-              className="glassmorphism p-8 rounded-2xl text-left hover:-translate-y-2 transition-transform duration-300 neon-border"
-            >
-              <div className="text-purple-400 mb-4">{feat.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{feat.title}</h3>
-              <p className="text-slate-400">{feat.desc}</p>
-            </motion.div>
-          ))}
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="group relative inline-flex items-center justify-center gap-2 bg-white text-black px-5 py-2.5 rounded-full font-medium text-sm transition-all hover:scale-105"
+          >
+            Get Started
+          </button>
         </div>
+      </nav>
 
-        {/* Before vs After AI Section */}
-        <div className="mt-40 mb-20 text-left">
-          <h2 className="text-4xl font-bold text-center mb-16">The Power of Personalization</h2>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Before */}
-            <div className="glassmorphism p-8 rounded-2xl border-slate-700 opacity-70">
-              <div className="text-sm text-slate-400 uppercase tracking-wider font-bold mb-4">Before AI (Generic)</div>
-              <div className="text-xl font-medium mb-6">"Buy our protein bar today. It tastes good and has protein."</div>
-              <div className="flex gap-2">
-                <span className="bg-slate-800 px-3 py-1 rounded-md text-xs text-slate-400">Boring</span>
-                <span className="bg-slate-800 px-3 py-1 rounded-md text-xs text-slate-400">Low Conversion</span>
-              </div>
-            </div>
+      {/* 1. HERO SECTION & 2. LIVE AI SHOWCASE */}
+      <main className="relative z-10 pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             
-            {/* After */}
-            <div className="glassmorphism p-8 rounded-2xl neon-border relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 blur-3xl rounded-full"></div>
-              <div className="text-sm text-purple-400 uppercase tracking-wider font-bold mb-4 flex items-center gap-2">
-                <Sparkles size={16} /> After SmartGen AI
+            {/* Left: Copy */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-purple-500/20 bg-purple-500/10 text-purple-300 font-medium text-xs mb-8 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                </span>
+                SmartGen v2.0 is now live
               </div>
-              <div className="text-2xl font-bold mb-6 text-white leading-tight">
-                "Fuel every rep. Clean protein power to push past your limits."
+              
+              <h1 className="text-5xl lg:text-7xl font-display font-extrabold mb-6 leading-[1.1] tracking-tight text-white">
+                Marketing campaigns <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
+                  generated by AI.
+                </span>
+              </h1>
+              
+              <p className="text-lg text-slate-400 mb-10 max-w-xl font-light leading-relaxed">
+                Transform your product idea into a high-converting, platform-optimized marketing campaign in seconds. Experience the future of personalized advertising.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={() => navigate('/dashboard')}
+                  className="group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-purple-600 to-blue-600 p-[1px] rounded-full overflow-hidden transition-all hover:shadow-[0_0_40px_rgba(139,92,246,0.4)] hover:scale-[1.02]"
+                >
+                  <span className="relative flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-4 rounded-full text-sm font-bold text-white w-full">
+                    Start Generating <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </button>
+                <button className="group relative inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-8 py-4 rounded-full font-medium text-sm transition-all">
+                  <Play size={16} className="text-slate-400 group-hover:text-white transition-colors" /> Watch Demo
+                </button>
               </div>
-              <div className="flex gap-2">
-                <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-md text-xs">High Emotion</span>
-                <span className="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-md text-xs">Fitness Audience</span>
+            </motion.div>
+
+            {/* Right: Live AI Showcase Mockup */}
+            <motion.div
+              initial={{ opacity: 0, y: 40, rotateY: 10 }}
+              animate={{ opacity: 1, y: 0, rotateY: 0 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+              style={{ perspective: 1000 }}
+              className="relative"
+            >
+              {/* Decorative glows behind the mockup */}
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 blur-[80px] opacity-20 rounded-full animate-pulse-glow"></div>
+              
+              <div className="relative glass-panel rounded-2xl border border-white/10 shadow-2xl overflow-hidden backdrop-blur-2xl bg-slate-900/60 p-1">
+                {/* MacOS style header */}
+                <div className="bg-slate-900/80 px-4 py-3 flex items-center gap-2 border-b border-white/5">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                  <div className="ml-4 text-xs font-medium text-slate-500 font-mono">smartgen-ai-workspace</div>
+                </div>
+                
+                {/* Mockup Body */}
+                <div className="p-6">
+                  <div className="flex gap-4 mb-6">
+                    <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center border border-purple-500/30 shrink-0">
+                      <Sparkles size={18} className="text-purple-400" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-white mb-1 flex items-center gap-2">
+                        SmartGen AI <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 text-[10px] uppercase tracking-wider">Generating</span>
+                      </div>
+                      <div className="text-sm text-slate-300 bg-slate-800/50 p-3 rounded-xl border border-white/5 font-mono text-xs leading-relaxed">
+                        <TypingText text="Optimizing emotional hooks for Tech Enthusiasts on LinkedIn... Slogan generated. Ad copy refined. Ready for deployment." />
+                        <span className="inline-block w-1.5 h-4 bg-purple-400 ml-1 animate-pulse align-middle"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Generated Card Mockup */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2.5, duration: 0.5 }}
+                    className="ml-14 bg-slate-950/80 rounded-xl border border-slate-800 p-4 relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500"></div>
+                    <div className="text-[10px] uppercase text-slate-500 font-bold tracking-wider mb-2">Generated Output</div>
+                    <div className="text-lg font-bold text-white mb-2 font-display">"Code faster. Think bigger."</div>
+                    <div className="text-xs text-slate-400 mb-4 line-clamp-2">Stop fighting your IDE. Our new AI coding assistant anticipates your logic before you even type. Build the future, today.</div>
+                    
+                    <div className="flex gap-3 mt-4">
+                      <div className="flex-1 bg-slate-900 rounded-lg p-2 border border-slate-800">
+                        <div className="text-[10px] text-slate-500 mb-1">Engagement</div>
+                        <div className="text-sm font-bold text-green-400">98% Match</div>
+                      </div>
+                      <div className="flex-1 bg-slate-900 rounded-lg p-2 border border-slate-800">
+                        <div className="text-[10px] text-slate-500 mb-1">Platform</div>
+                        <div className="text-sm font-bold text-blue-400">LinkedIn</div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </main>
+
+      {/* 3. TRUST / STATS SECTION */}
+      <section className="relative z-10 py-12 border-y border-white/5 bg-white/[0.02]">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-white/5">
+            {[
+              { stat: "10x", label: "Faster Generation", color: "text-purple-400" },
+              { stat: "95%", label: "Audience Match", color: "text-blue-400" },
+              { stat: "50k+", label: "Campaigns Created", color: "text-pink-400" },
+              { stat: "24/7", label: "AI Optimization", color: "text-white" }
+            ].map((item, i) => (
+              <div key={i} className="text-center px-4">
+                <div className={`text-4xl lg:text-5xl font-display font-bold mb-2 ${item.color}`}>{item.stat}</div>
+                <div className="text-sm text-slate-500 font-medium uppercase tracking-wider">{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. BEFORE VS AFTER AI SECTION */}
+      <section className="relative z-10 py-32">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl lg:text-5xl font-display font-bold text-white mb-6">The Power of Personalization</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg">See the dramatic difference between generic human copy and emotionally-targeted AI marketing.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Before */}
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="glass-panel p-8 rounded-3xl border-slate-800 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="text-sm text-slate-500 uppercase tracking-wider font-bold flex items-center gap-2">
+                  <XCircle size={16} className="text-slate-500" /> Traditional Marketing
+                </div>
+              </div>
+              <div className="text-xl font-medium mb-8 text-slate-300 leading-relaxed">
+                "Buy our new noise-cancelling headphones today. They have great sound quality and a long battery life."
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <span className="bg-slate-800/50 px-3 py-1 rounded-md text-xs text-slate-400 border border-slate-700">Generic Tone</span>
+                <span className="bg-slate-800/50 px-3 py-1 rounded-md text-xs text-slate-400 border border-slate-700">Low Conversion</span>
+              </div>
+            </motion.div>
+            
+            {/* After */}
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="glass-panel p-8 rounded-3xl neon-border relative overflow-hidden group bg-slate-900/40"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 blur-[80px] rounded-full group-hover:bg-purple-500/30 transition-colors"></div>
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <div className="text-sm text-purple-400 uppercase tracking-wider font-bold flex items-center gap-2">
+                  <CheckCircle2 size={16} /> SmartGen AI
+                </div>
+                <div className="px-2 py-1 bg-purple-500/20 rounded text-[10px] text-purple-300 font-bold border border-purple-500/30">Target: Professionals</div>
+              </div>
+              <div className="text-2xl font-bold mb-8 text-white leading-tight font-display relative z-10">
+                "Silence the chaos. Immerse yourself in deep work with studio-grade isolation."
+              </div>
+              <div className="flex flex-wrap gap-2 relative z-10">
+                <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-md text-xs">High Emotion</span>
+                <span className="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-md text-xs">Productivity Hook</span>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. FEATURE SHOWCASE SECTION */}
+      <section className="relative z-10 py-32 bg-[#050b14] border-t border-white/5">
+        <div className="container mx-auto px-6 lg:px-12">
+          <div className="mb-20 md:flex justify-between items-end">
+            <div className="max-w-2xl">
+              <h2 className="text-3xl lg:text-5xl font-display font-bold text-white mb-6">Everything you need to launch.</h2>
+              <p className="text-slate-400 text-lg">A complete suite of AI tools designed for modern marketing teams.</p>
+            </div>
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="mt-6 md:mt-0 flex items-center gap-2 text-purple-400 hover:text-purple-300 font-medium group"
+            >
+              Explore Dashboard <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: <Zap />, title: "Instant Generation", desc: "Slogans, captions, and ad copy generated in real-time." },
+              { icon: <Target />, title: "Hyper-Personalization", desc: "Adapt tone and style for 10+ specific demographics instantly." },
+              { icon: <ImageIcon />, title: "AI Poster Studio", desc: "Generate stunning promotional images synced with your copy." },
+              { icon: <BarChart />, title: "Engagement Analytics", desc: "Predict campaign success with our AI scoring algorithm." },
+              { icon: <Sparkles />, title: "Brand Identity", desc: "Train the AI on your specific brand voice (Apple, Nike, etc)." },
+              { icon: <Play />, title: "Presentation Mode", desc: "Pitch campaigns directly to clients with a cinematic fullscreen mode." }
+            ].map((feat, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ scale: 1.02, y: -5 }}
+                className="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all group relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500/0 via-purple-500/0 to-purple-500/0 group-hover:from-purple-500 group-hover:via-blue-500 group-hover:to-pink-500 transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
+                <div className="text-purple-400 mb-6 w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 group-hover:scale-110 transition-transform">
+                  {feat.icon}
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-white font-display">{feat.title}</h3>
+                <p className="text-slate-400 text-sm leading-relaxed">{feat.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Footer */}
+      <footer className="relative z-10 py-32 border-t border-white/5 text-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/20 pointer-events-none"></div>
+        <div className="container mx-auto px-6 relative z-10">
+          <h2 className="text-4xl lg:text-6xl font-display font-bold text-white mb-8">Ready to revolutionize your marketing?</h2>
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="group relative inline-flex items-center justify-center gap-3 bg-white text-black px-10 py-5 rounded-full font-bold text-lg transition-all hover:scale-105 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+          >
+            Enter the Workspace <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </footer>
+
     </div>
   );
 }

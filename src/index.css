@@ -1,43 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Outfit", system-ui, sans-serif;
   
-  --color-primary-500: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-secondary-500: #3b82f6;
-  --color-dark-bg: #0f172a;
-  --color-dark-card: #1e293b;
+  --color-dark-bg: #030712;
+  --color-dark-card: #0b0f19;
+  --color-dark-border: #1f2937;
+  
   --color-neon-blue: #00f0ff;
-  --color-neon-purple: #b026ff;
+  --color-neon-purple: #8b5cf6;
+  --color-neon-pink: #ec4899;
 }
 
 @layer utilities {
   .glassmorphism {
-    @apply bg-slate-900/40 backdrop-blur-md border border-slate-700/50 shadow-xl;
+    @apply bg-slate-900/40 backdrop-blur-xl border border-white/5 shadow-2xl;
   }
+  
+  .glass-panel {
+    @apply bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-2xl border border-white/10;
+  }
+
   .neon-border {
-    @apply border border-transparent;
-    background: linear-gradient(to right, #1e293b, #1e293b), 
-                linear-gradient(to right, var(--color-neon-blue), var(--color-neon-purple));
-    background-clip: padding-box, border-box;
-    background-origin: padding-box, border-box;
+    position: relative;
   }
-  .aurora-bg {
-    background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.2) 0%, transparent 40%),
-                var(--color-dark-bg);
+  .neon-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to right, var(--color-neon-purple), var(--color-neon-blue));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
+
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400;
+  }
+  
+  .text-gradient-subtle {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-200 to-slate-400;
   }
 }
 
 @layer base {
   body {
-    @apply bg-slate-900 text-slate-100 font-sans antialiased overflow-x-hidden min-h-screen;
-    background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.2) 0%, transparent 40%),
-                var(--color-dark-bg);
+    @apply bg-[#030712] text-slate-200 font-sans antialiased overflow-x-hidden min-h-screen selection:bg-purple-500/30 selection:text-purple-200;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+}
+
+/* Custom Animations */
+@keyframes aurora-rotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.5); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes mesh-move {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; filter: blur(20px); }
+  50% { opacity: 0.8; filter: blur(30px); }
+}
+
+@keyframes particle-float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-10px) translateX(5px); }
+  50% { transform: translateY(-20px) translateX(-5px); }
+  75% { transform: translateY(-10px) translateX(5px); }
+}
+
+.animate-aurora {
+  animation: aurora-rotate 20s linear infinite;
+}
+
+.animate-mesh {
+  animation: mesh-move 15s ease-in-out infinite alternate;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: particle-float 6s ease-in-out infinite;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
 }
