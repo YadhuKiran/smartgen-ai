@@ -1,11 +1,13 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, LayoutDashboard, Users, Image as ImageIcon, Bookmark, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { Sparkles, LayoutDashboard, Users, Image as ImageIcon, Bookmark, Settings as SettingsIcon, LogOut, ChevronRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={18} /> },
@@ -15,7 +17,7 @@ export default function DashboardLayout() {
 
   const workspaceItems = [
     { name: 'Saved Campaigns', path: '/dashboard/saved', icon: <Bookmark size={18} /> },
-    { name: 'Settings', path: '/dashboard/settings', icon: <Settings size={18} /> },
+    { name: 'Settings', path: '/dashboard/settings', icon: <SettingsIcon size={18} /> },
   ];
 
   return (
@@ -107,13 +109,19 @@ export default function DashboardLayout() {
         {/* User Profile Mock */}
         <div className="p-4 mx-4 mb-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors cursor-pointer flex items-center justify-between group">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold shadow-[0_0_10px_rgba(236,72,153,0.3)]">YK</div>
+            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold shadow-[0_0_10px_rgba(236,72,153,0.3)]">
+              {user?.initials || 'U'}
+            </div>
             <div>
-              <div className="text-sm font-bold text-white leading-tight">YadhuKiran</div>
-              <div className="text-[10px] text-slate-400">Pro Plan</div>
+              <div className="text-sm font-bold text-white leading-tight truncate w-32">{user?.name || 'User'}</div>
+              <div className="text-[10px] text-slate-400">{user?.plan || 'Free Plan'}</div>
             </div>
           </div>
-          <button onClick={(e) => { e.stopPropagation(); navigate('/'); }} className="text-slate-500 hover:text-red-400 transition-colors p-2">
+          <button onClick={(e) => { 
+            e.stopPropagation(); 
+            logout(); 
+            navigate('/login'); 
+          }} className="text-slate-500 hover:text-red-400 transition-colors p-2">
             <LogOut size={16} />
           </button>
         </div>

@@ -16,12 +16,32 @@ export default function PosterStudio() {
     if (!prompt) return;
     
     setIsGenerating(true);
-    // Simulating API call for image generation since we don't have a real stable diffusion API hooked up
+    setImage(null);
+    
+    // Simulate API delay for dramatic effect then load the image
     setTimeout(() => {
-      // Using a high-quality unsplash image as a placeholder for the cinematic mockup
-      setImage(`https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop`);
-      setIsGenerating(false);
-    }, 3000);
+      // Use pollinations.ai to generate image directly from prompt
+      // Appending a random seed parameter ensures a fresh image if prompt is the same
+      const seed = Math.floor(Math.random() * 1000000);
+      const styleSuffix = " cinematic lighting, highly detailed, photorealistic, 8k";
+      const fullPrompt = prompt + styleSuffix;
+      const width = 1080;
+      const height = 1080; // Defaulting to 1:1 for simplicity, can be expanded
+      
+      const imageUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?width=${width}&height=${height}&seed=${seed}&nologo=true`;
+      
+      // Preload image to avoid showing broken image icon while it loads
+      const img = new window.Image();
+      img.src = imageUrl;
+      img.onload = () => {
+        setImage(imageUrl);
+        setIsGenerating(false);
+      };
+      img.onerror = () => {
+        setIsGenerating(false);
+        alert("Failed to generate image. Please try again.");
+      }
+    }, 2000);
   };
 
   useEffect(() => {

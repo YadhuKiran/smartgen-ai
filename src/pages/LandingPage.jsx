@@ -145,7 +145,7 @@ export default function LandingPage() {
           <span className="text-2xl font-display font-bold text-white tracking-tight">SmartGen<span className="text-purple-400">.ai</span></span>
         </div>
         <div className="flex gap-6 items-center">
-          <MagneticButton onClick={() => navigate('/dashboard')} className="group relative inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all overflow-hidden">
+          <MagneticButton onClick={() => navigate('/login')} className="group relative inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-6 py-2.5 rounded-full font-medium text-sm transition-all overflow-hidden">
             Log in
           </MagneticButton>
           <MagneticButton onClick={() => navigate('/dashboard')} className="group relative inline-flex items-center justify-center gap-2 bg-white text-black px-7 py-2.5 rounded-full font-bold text-sm transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)]">
