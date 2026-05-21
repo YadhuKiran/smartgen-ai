@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-secondary-500: #3b82f6;
+  --color-dark-bg: #0f172a;
+  --color-dark-card: #1e293b;
+  --color-neon-blue: #00f0ff;
+  --color-neon-purple: #b026ff;
+}
+
+@layer utilities {
+  .glassmorphism {
+    @apply bg-slate-900/40 backdrop-blur-md border border-slate-700/50 shadow-xl;
+  }
+  .neon-border {
+    @apply border border-transparent;
+    background: linear-gradient(to right, #1e293b, #1e293b), 
+                linear-gradient(to right, var(--color-neon-blue), var(--color-neon-purple));
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+  }
+  .aurora-bg {
+    background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.2) 0%, transparent 40%),
+                var(--color-dark-bg);
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-slate-100 font-sans antialiased overflow-x-hidden min-h-screen;
+    background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.2) 0%, transparent 40%),
+                var(--color-dark-bg);
+  }
+}
