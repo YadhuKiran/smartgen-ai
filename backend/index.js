@@ -149,6 +149,10 @@ app.post('/api/generate-comparison', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Backend server running on port ${port}`);
-});
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Backend server running on port ${port}`);
+  });
+}
+
+module.exports = app;
