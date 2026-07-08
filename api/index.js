@@ -10,7 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize Gemini API client
-// Note: You need to set GEMINI_API_KEY in your .env file
+// Note: You need to set GEMINI_API_KEY in your .env file 
+//env's are way more powerful
 const apiKey = process.env.GEMINI_API_KEY;
 if (!apiKey || apiKey === 'your_gemini_api_key_here') {
   console.warn('WARNING: GEMINI_API_KEY is not configured properly in .env');
